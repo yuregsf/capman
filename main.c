@@ -3,13 +3,13 @@
 #include <string.h>
 
 typedef struct{
-    int playerX, playerY, ghostX, ghostY, mapX, mapY;
+    int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow;
     char **mapa;
 }configMapa;
 
 void genMap();
-void allocMatrix(char **matrix, int row);
-void freeMatrix(char **matrix, int row);
+char **allocMatrix(int row, int col);
+void freeMatrix(char **matrix, int size);
 
 int main(){
     genMap();
@@ -24,45 +24,50 @@ void genMap(void){
     mapaSelecionado = fopen("mapa", "r");
     while(fgets(line, sizeof(line), mapaSelecionado)){
         if(strstr(line, "playerPos") != NULL){
-            fscanf(mapaSelecionado, "%d", &config.playerX);
-            fscanf(mapaSelecionado, "%d", &config.playerY);
+            fscanf(mapaSelecionado, "%d", &config.playerCol);
+            fscanf(mapaSelecionado, "%d", &config.playerRow);
         }
         if(strstr(line, "ghostPos") != NULL){
-            fscanf(mapaSelecionado, "%d", &config.ghostX);
-            fscanf(mapaSelecionado, "%d", &config.ghostY);
+            fscanf(mapaSelecionado, "%d", &config.ghostCol);
+            fscanf(mapaSelecionado, "%d", &config.ghostRow);
         }
         if(strstr(line, "map") != NULL){
-            fscanf(mapaSelecionado, "%d", &config.mapX);
-            fscanf(mapaSelecionado, "%d", &config.mapY);
+            fscanf(mapaSelecionado, "%d", &config.mapCol);
+            fscanf(mapaSelecionado, "%d", &config.mapRow);
             break;
         }
     }
-    
-    char **map = (char **)malloc(config.mapY*sizeof(char*));
-    allocMatrix(map, config.mapX);
-    for (int i = 0; i < config.mapY; i++){
-        fscanf(mapaSelecionado, "%s", map[i]);
+
+    char **map = allocMatrix(config.mapRow, config.mapCol);
+    for (int i = 0; i < config.mapRow; i++){
+        fscanf(mapaSelecionado, "%s", line);
+        for (int j = 0; j < config.mapCol; j++){
+            map[i][j] = line[j];
+        }
+        
     }
         
-    for (int i = 0; i < config.mapX; i++){
-        for (int j = 0; j < config.mapY; j++){
+    for (int i = 0; i < config.mapRow; i++){
+        for (int j = 0; j < config.mapCol; j++){
             printf("%c", map[i][j]);
         }
         printf("\n");
     }
     
-    freeMatrix(map, config.mapY);
+    freeMatrix(map, config.mapRow);
     fclose(mapaSelecionado);
 }
 
-void allocMatrix(char **matrix, int size){
-    for(int i = 0; i < size; i++){
-        matrix[i] = (char *)malloc(size*sizeof(char));
+char** allocMatrix(int row, int col){
+    char **matrix = malloc(row*sizeof(char*));
+    for(int i = 0; i < row; i++){
+        matrix[i] = malloc(col*sizeof(char));
     }
+    return matrix;
 }
 
-void freeMatrix(char **matrix, int size){
-    for(int i = 0; i < size; i++){
+void freeMatrix(char **matrix, int row){
+    for(int i = 0; i < row; i++){
         free(matrix[i]);
     }
     free(matrix);
