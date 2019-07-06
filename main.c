@@ -43,9 +43,13 @@ void genMap(void){
         fscanf(mapaSelecionado, "%s", line);
         for (int j = 0; j < config.mapCol; j++){
             map[i][j] = line[j];
-        }
-        
+        }        
     }
+
+    //Posição do jogador
+    map[config.playerRow][config.playerCol] = 'P';
+    //Spawn dos fantasmas
+    map[config.ghostRow][config.ghostCol] = 'G';
         
     for (int i = 0; i < config.mapRow; i++){
         for (int j = 0; j < config.mapCol; j++){
