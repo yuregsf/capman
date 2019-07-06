@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "termip.h"
 
 typedef struct{
     int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow;
@@ -10,11 +11,13 @@ typedef struct{
 typedef struct{
     int playerX, playerY;
     int pontos;
-}playercordenadas;
+}player;
 
 void genMap();
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
+void movimentopacman(char **M, int x, int y);
+void printMatrix(char **M, int row, int col);
 
 int main(){
     while(1){
@@ -59,13 +62,8 @@ void genMap(void){
     map[config.playerRow][config.playerCol] = 'P';
     //Spawn dos fantasmas
     map[config.ghostRow][config.ghostCol] = 'G';
-        
-    for (int i = 0; i < config.mapRow; i++){
-        for (int j = 0; j < config.mapCol; j++){
-            printf("%c", map[i][j]);
-        }
-        printf("\n");
-    }
+
+    movimentopacman(map, config.playerCol, config.playerRow);
     
     freeMatrix(map, config.mapRow);
     fclose(mapaSelecionado);
