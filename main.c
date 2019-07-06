@@ -54,10 +54,10 @@ void genMap(void){
         }        
     }
 
-    //Posição do jogador
-    map[config.playerRow][config.playerCol] = 'P';
-    //Spawn dos fantasmas
-    map[config.ghostRow][config.ghostCol] = 'G';
+    // //Posição do jogador
+    // map[config.playerRow][config.playerCol] = 'P';
+    // //Spawn dos fantasmas
+    // map[config.ghostRow][config.ghostCol] = 'G';
 
     movimentopacman(map, config.playerCol, config.playerRow);
     
@@ -88,6 +88,7 @@ void movimentopacman(char **M, int x, int y){
     while(1){
         clear();
         gotoxy(1,1);
+        printMatrix(M, 6, 23);
         botao = getch();
         if(botao == 23361){ //pra cima
             if(M[(p.playerY)-1][(p.playerX)] == 'H'){     //Verificando se a posição a cima do Pac-Man é uma parede
@@ -167,7 +168,6 @@ void movimentopacman(char **M, int x, int y){
             M[(p.playerY)][(p.playerX)] = '>'; 
         }
         } 
-        printMatrix(M, 23, 6);
     }
 
 }
