@@ -1,22 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "termip.h"
 
 typedef struct{
     int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow;
-    char **mapa;
 }configMapa;
 
 void genMap();
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
+void menuPrincipal(void);
 
 int main(){
-    genMap();
+    //genMap();
+    menuPrincipal();
     return 0;
 }
 
-//Gera mapa baseado nos parâmetros do arquivo .pacmap
+//Gera mapa baseado nos parâmetros do arquivo mapa
 void genMap(void){
     FILE * mapaSelecionado;
     configMapa config;
@@ -75,4 +77,49 @@ void freeMatrix(char **matrix, int row){
         free(matrix[i]);
     }
     free(matrix);
+}
+
+void menuPrincipal(void){
+    int ncols, nrows, key, c= ' ', count=0, selected = 0;
+    eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
+    clear();
+    while(1){
+        //eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
+        clear();
+        nrows = get_terminal_nrows();
+        ncols = get_terminal_ncols();
+        draw_window_border(1, 1, ncols, nrows, "");
+        gotoxy(nrows/2-2, 2);
+        printf(" _____        _____ __  __          _   _  ____  \n");
+        gotoxy(nrows/2-1, 2);
+        printf("|  __ \\ /\\   / ____|  \\/  |   /\\   | \\ | |/ __ \\ \n");
+        gotoxy(nrows/2, 2);
+        printf("| |__) /  \\ | |    | \\  / |  /  \\  |  \\| | |  | |\n");
+        gotoxy(nrows/2+1, 2);
+        printf("|  ___/ /\\ \\| |    | |\\/| | / /\\ \\ | . ` | |  | |\n");
+        gotoxy(nrows/2+2, 2);
+        printf("| |  / ____ \\ |____| |  | |/ ____ \\| |\\  | |__| |\n");
+        gotoxy(nrows/2+3, 2);
+        printf("|_| /_/    \\_\\_____|_|  |_/_/    \\_\\_| \\_|\\____/ \n");
+
+        gotoxy(n)
+
+        fflush(stdout);
+		
+		// Espera uma tecla ser pressionada em um intervalo de 200ms
+        key = getch();
+		if( key != -1 ) c= key;
+		count += 2;
+
+        if(key == 'q') break;
+        if( key == 23361 ) { // UP
+			R--;
+		} else if( key == 23362 ) {	// DOWN
+			R++;
+		}
+
+    }
+    eval( ATTR_RESET_ALL CURSOR_VISIBLE );
+    gotoxy(nrows,1);
+	eval("\n");
 }
