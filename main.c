@@ -37,19 +37,13 @@ void genMap(void){
             break;
         }
     }
+    
     char **map = (char **)malloc(config.mapY*sizeof(char*));
     allocMatrix(map, config.mapX);
-    while(fgets(line, sizeof(line), mapaSelecionado)){
-        for (int i = 0; i < config.mapY; i++)
-        {
-            for (int j = 0; j < config.mapX; j++)
-            {
-                map[j][i] = line[i];
-            }
-            
-        }
-        
+    for (int i = 0; i < config.mapY; i++){
+        fscanf(mapaSelecionado, "%s", map[i]);
     }
+        
     for (int i = 0; i < config.mapX; i++){
         for (int j = 0; j < config.mapY; j++){
             printf("%c", map[i][j]);
