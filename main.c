@@ -148,7 +148,7 @@ void movimentopacman(char **M, int x, int y){
             M[(p.playerY)][(p.playerX)] = '<'; 
         }
         }
-        if(botao == 23361){ //pra esquerda
+        if(botao == 23364){ //pra esquerda
             if(M[(p.playerY)][(p.playerX)-1] == 'H')     //Verificando se a posição a esquerda do Pac-Man é uma parede
             {
             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
