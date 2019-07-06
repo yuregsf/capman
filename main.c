@@ -7,6 +7,11 @@ typedef struct{
     char **mapa;
 }configMapa;
 
+typedef struct{
+    int playerX, playerY;
+    int pontos;
+}playercordenadas;
+
 void genMap();
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
@@ -75,4 +80,88 @@ void freeMatrix(char **matrix, int row){
         free(matrix[i]);
     }
     free(matrix);
+}
+void movimentopacman(){
+    int botao;
+    botao = getch();
+    if(botao == 23361){ //pra cima
+        if(M[(playercordenadas.playerY)-1][(playercordenadas.playerX)] == 'H')     //Verificando se a posição a cima do Pac-Man é uma parede
+        {
+          /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+        }
+      else{
+        if(M[(playercordenadas.playerY)-1][(playercordenadas.playerX)] == '.'){
+            playercordenadas.pontos=playercordenadas.pontos+10;
+        }
+        if(M[(playercordenadas.playerY)-1][(playercordenadas.playerX)] == '*'){
+            playercordenadas.pontos=playercordenadas.pontos+50; 
+        }
+        if(M[(playercordenadas.playerY)-1][(playercordenadas.playerX)] == 'F'){
+            playercordenadas.pontos=playercordenadas.pontos+100; 
+        }
+        M[(playercordenadas.playerY)][(playercordenadas.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+          (playercordenadas.playerY) = (playercordenadas.playerY) - 1;               //Atribuindo a nova posição à nosso personagem
+          M[(playercordenadas.playerY)][(playercordenadas.playerX)] = 'v'; 
+      }
+    }
+    if(botao == 23362){ //pra baixo
+        if(M[(playercordenadas.playerY)+1][(playercordenadas.playerX)] == 'H')     //Verificando se a posição a baixo do Pac-Man é uma parede
+        {
+          /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+        }
+      else{
+        if(M[(playercordenadas.playerY)+1][(playercordenadas.playerX)] == '.'){
+            playercordenadas.pontos=playercordenadas.pontos+10;
+        }
+        if(M[(playercordenadas.playerY)+1][(playercordenadas.playerX)] == '*'){
+            playercordenadas.pontos=playercordenadas.pontos+50; 
+        }
+        if(M[(playercordenadas.playerY)+1][(playercordenadas.playerX)] == 'F'){
+            playercordenadas.pontos=playercordenadas.pontos+100; 
+        }
+        M[(playercordenadas.playerY)][(playercordenadas.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+          (playercordenadas.playerY) = (playercordenadas.playerY) + 1;               //Atribuindo a nova posição à nosso personagem
+          M[(playercordenadas.playerY)][(playercordenadas.playerX)] = '^'; 
+      }
+    }
+    if(botao == 23363){ //pra direita
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)+1] == 'H')     //Verificando se a posição a direita do Pac-Man é uma parede
+        {
+          /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+        }
+      else{
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)+1] == '.'){
+            playercordenadas.pontos=playercordenadas.pontos+10;
+        }
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)+1] == '*'){
+            playercordenadas.pontos=playercordenadas.pontos+50; 
+        }
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)+1] == 'F'){
+            playercordenadas.pontos=playercordenadas.pontos+100; 
+        }
+        M[(playercordenadas.playerY)][(playercordenadas.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+          (playercordenadas.playerX) = (playercordenadas.playerX) +1;               //Atribuindo a nova posição à nosso personagem
+          M[(playercordenadas.playerY)][(playercordenadas.playerX)] = '<'; 
+      }
+    }
+    if(botao == 23361){ //pra esquerda
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)-1] == 'H')     //Verificando se a posição a esquerda do Pac-Man é uma parede
+        {
+          /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+        }
+      else{
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)-1] == '.'){
+            playercordenadas.pontos=playercordenadas.pontos+10;
+        }
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)-1] == '*'){
+            playercordenadas.pontos=playercordenadas.pontos+50; 
+        }
+        if(M[(playercordenadas.playerY)][(playercordenadas.playerX)-1] == 'F'){
+            playercordenadas.pontos=playercordenadas.pontos+100; 
+        }
+        M[(playercordenadas.playerY)][(playercordenadas.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+          (playercordenadas.playerX) = (playercordenadas.playerX) - 1;               //Atribuindo a nova posição à nosso personagem
+          M[(playercordenadas.playerY)][(playercordenadas.playerX)] = '>'; 
+      }
+    } 
 }
