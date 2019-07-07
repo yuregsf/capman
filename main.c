@@ -10,7 +10,9 @@ typedef struct{
 typedef struct{
     int playerX, playerY;
     int pontos;
+    char nome[10];
 }player;
+
 
 void genMap();
 char **allocMatrix(int row, int col);
@@ -282,4 +284,24 @@ void menuPrincipal(void){
     eval( ATTR_RESET_ALL CURSOR_VISIBLE );
     gotoxy(nrows,1);
 	eval("\n");
+}
+void ranking(int p.pontos){
+    FILE 
+
+    player rank;
+    int *ranking;
+    ranking = (int*) calloc(10,sizeof(int));
+    if(p.pontos>ranking[9]){
+        ranking[9]=pontos;
+    }
+    for (k = 0; k < 10; k++) {
+        for (j = 0; j < 10 - 1; j++) {
+            if (ranking[j] > ranking[j + 1]) {
+                aux          = ranking[j];
+                ranking[j]     = ranking[j + 1];
+                ranking[j + 1] = aux;
+            }
+        }
+    }
+
 }
