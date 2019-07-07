@@ -15,7 +15,7 @@ typedef struct{
 void genMap();
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
-void movimentopacman(char **M, int x, int y);
+void movimentopacman(char **M, int x, int y, configMapa config);
 void printMatrix(char **M, int row, int col);
 void menuPrincipal(void);
 
@@ -61,7 +61,7 @@ void genMap(void){
     // //Spawn dos fantasmas
     // map[config.ghostRow][config.ghostCol] = 'G';
 
-    movimentopacman(map, config.playerCol, config.playerRow);
+    movimentopacman(map, config.playerCol, config.playerRow, config);
     
     
     freeMatrix(map, config.mapRow);
@@ -82,13 +82,12 @@ void freeMatrix(char **matrix, int row){
     }
     free(matrix);
 }
-void movimentopacman(char **M, int x, int y){
+void movimentopacman(char **M, int x, int y, configMapa config){
     player p;
     p.playerX = x;
     p.playerY = y;
     int botao,auxmov;
     auxmov=23364;
-    configMapa tunel;
     while(1){
         clear();
         gotoxy(1,1);
@@ -99,6 +98,11 @@ void movimentopacman(char **M, int x, int y){
         }
         if(botao == 23361){ //pra cima
             auxmov=botao;
+            if((p.playerY)-1 < 0){     
+                M[(p.playerY)][(p.playerX)] = ' '; 
+                p.playerY = config.mapRow-1;
+                M[(p.playerY)][(p.playerX)] = 'v'; 
+            }
             if(M[(p.playerY)-1][(p.playerX)] == 'H'){     //Verificando se a posição a cima do Pac-Man é uma parede
             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
             }else{
@@ -118,6 +122,11 @@ void movimentopacman(char **M, int x, int y){
         }
         if(botao == 23362){ //pra baixo
             auxmov=botao;
+            if((p.playerY)+1 >= config.mapRow){     
+                M[(p.playerY)][(p.playerX)] = ' '; 
+                p.playerY = 0;
+                M[(p.playerY)][(p.playerX)] = '^'; 
+            }
             if(M[(p.playerY)+1][(p.playerX)] == 'H')     //Verificando se a posição a baixo do Pac-Man é uma parede
             {
             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
@@ -139,10 +148,11 @@ void movimentopacman(char **M, int x, int y){
         }
         if(botao == 23363){ //pra direita
             auxmov=botao;
-            /* if((p.playerX)+1 > tunel.mapCol){     
+            if((p.playerX)+1 >= config.mapCol){     
+                M[(p.playerY)][(p.playerX)] = ' '; 
                 p.playerX = 0;
                 M[(p.playerY)][(p.playerX)] = '<'; 
-            }*/
+            }
             if(M[(p.playerY)][(p.playerX)+1] == 'H')     //Verificando se a posição a direita do Pac-Man é uma parede
                 {
                 /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
@@ -164,10 +174,11 @@ void movimentopacman(char **M, int x, int y){
         }
         if(botao == 23364){ //pra esquerda
             auxmov=botao;
-            /*if((p.playerX)-1 < 0){     
-                p.playerX = tunel.mapCol;
+            if((p.playerX)-1 < 0){     
+                M[(p.playerY)][(p.playerX)] = ' '; 
+                p.playerX = config.mapCol-1;
                 M[(p.playerY)][(p.playerX)] = '>'; 
-            }*/
+            }
             if(M[(p.playerY)][(p.playerX)-1] == 'H')     //Verificando se a posição a esquerda do Pac-Man é uma parede
             {
             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
