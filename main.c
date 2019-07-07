@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "termip.h"
+#include <dirent.h>
 
 typedef struct{
     int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow;
@@ -12,12 +13,13 @@ typedef struct{
     int pontos;
 }player;
 
-void genMap();
+void genMap(char c[128]);
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
 void movimentopacman(char **M, int x, int y);
 void printMatrix(char **M, int row, int col);
 void menuPrincipal(void);
+void menuMapas(void);
 
 int main(){
     //genMap();
@@ -26,12 +28,12 @@ int main(){
 }
 
 //Gera mapa baseado nos parâmetros do arquivo mapa
-void genMap(void){
+void genMap(char c[128]){
     FILE * mapaSelecionado;
     configMapa config;
     char line[256];
     int key;
-    mapaSelecionado = fopen("mapa", "r");
+    mapaSelecionado = fopen(c, "r");
     while(fgets(line, sizeof(line), mapaSelecionado)){
         if(strstr(line, "playerPos") != NULL){
             fscanf(mapaSelecionado, "%d", &config.playerCol);
@@ -62,8 +64,6 @@ void genMap(void){
     // map[config.ghostRow][config.ghostCol] = 'G';
 
     movimentopacman(map, config.playerCol, config.playerRow);
-    
-    
     freeMatrix(map, config.mapRow);
     fclose(mapaSelecionado);
 }
@@ -252,14 +252,86 @@ void menuPrincipal(void){
     if(key == '\n'){
         switch(selected%3){
             case 0:
-                genMap();
+                genMap("default");
                 break;
             case 1:
             case -2:
-                //menu do mapa
+                menuMapas();
                 break;
             case 2:
             case -1:
+                break;
+        }
+    }
+    eval( ATTR_RESET_ALL CURSOR_VISIBLE );
+    gotoxy(nrows,1);
+	eval("\n");
+}
+
+void menuMapas(void){
+    int ncols, nrows, key, c= ' ', count=0, selected = 0;
+    eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
+    clear();
+    while(1){
+        eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
+        clear();
+        nrows = get_terminal_nrows();
+        ncols = get_terminal_ncols();
+        draw_window_border(1, 1, ncols/2, nrows, "");
+        if(selected%3 == 0){
+            gotoxy(nrows/2, 2);
+            printf(FG_RED "INF\n");
+            gotoxy(nrows/2+1, 2);
+            printf(FG_GREEN "PAMONHARIA\n");
+            gotoxy(nrows/2+2, 2);
+            printf(FG_GREEN "BIBLIOTECA");
+
+        }
+        if(selected%3 == 1 || selected%3 == -2){
+            gotoxy(nrows/2, 2);
+            printf(FG_GREEN "INF\n");
+            gotoxy(nrows/2+1, 2);
+            printf(FG_RED "PAMONHARIA\n");
+            gotoxy(nrows/2+2, 2);
+            printf(FG_GREEN "BIBLIOTECA");
+
+        }
+        if(selected%3 == 2 || selected%3 == -1){
+            gotoxy(nrows/2, 2);
+            printf(FG_GREEN "INF\n");
+            gotoxy(nrows/2+1, 2);
+            printf(FG_GREEN "PAMONHARIA\n");
+            gotoxy(nrows/2+2, 2);
+            printf(FG_RED "BIBLIOTECA");
+
+        }
+
+        fflush(stdout);
+		
+        key = getch();
+
+        if(key == 27) menuPrincipal();
+        if(key == 'q' || key == '\n') break;
+        if( key == 23361 ) { // UP
+			selected--;
+		} else if( key == 23362 ) {	// DOWN
+			selected++;
+		}
+
+
+    }
+    if(key == '\n'){
+        switch(selected%3){
+            case 0:
+                genMap("default");
+                break;
+            case 1:
+            case -2:
+                genMap("pamonharia");
+                break;
+            case 2:
+            case -1:
+                genMap("biblioteca");
                 break;
         }
     }
