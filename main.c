@@ -7,6 +7,11 @@ typedef struct{
     int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow;
 }configMapa;
 
+typedef struct{
+    int playerX, playerY;
+    int pontos;
+}playercordenadas;
+
 void genMap();
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
@@ -87,7 +92,6 @@ void freeMatrix(char **matrix, int row){
     }
     free(matrix);
 }
-
 void menuPrincipal(void){
     int ncols, nrows, key, c= ' ', count=0, selected = 0;
     eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
@@ -169,4 +173,5 @@ void menuPrincipal(void){
     eval( ATTR_RESET_ALL CURSOR_VISIBLE );
     gotoxy(nrows,1);
 	eval("\n");
+
 }
