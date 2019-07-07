@@ -10,11 +10,13 @@ typedef struct{
 typedef struct{
     int playerX, playerY;
     int pontos;
-}playercordenadas;
+}player;
 
 void genMap();
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
+void movimentopacman(char **M, int x, int y);
+void printMatrix(char **M, int row, int col);
 void menuPrincipal(void);
 
 int main(){
@@ -54,25 +56,13 @@ void genMap(void){
         }            
     }
 
-    //Posição do jogador
-    map[config.playerRow][config.playerCol] = 'P';
-    //Spawn dos fantasmas
-    map[config.ghostRow][config.ghostCol] = 'G';
-        
-    while(1){
-        eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
-        clear();
-        for (int i = 0; i < config.mapRow; i++){
-            gotoxy(i+1, 1);
-            for (int j = 0; j < config.mapCol; j++){
-                printf("%c", map[i][j]);
-            }
-            printf("\n");
-        }
-        fflush(stdout);
-        key = getch();
+    // //Posição do jogador
+    // map[config.playerRow][config.playerCol] = 'P';
+    // //Spawn dos fantasmas
+    // map[config.ghostRow][config.ghostCol] = 'G';
 
-    }
+    movimentopacman(map, config.playerCol, config.playerRow);
+    
     
     freeMatrix(map, config.mapRow);
     fclose(mapaSelecionado);
@@ -92,6 +82,109 @@ void freeMatrix(char **matrix, int row){
     }
     free(matrix);
 }
+void movimentopacman(char **M, int x, int y){
+    player p;
+    p.playerX = x;
+    p.playerY = y;
+    int botao;
+
+    while(1){
+        clear();
+        gotoxy(1,1);
+        printMatrix(M, 6, 23);
+        botao = getch();
+        if(botao == 23361){ //pra cima
+            if(M[(p.playerY)-1][(p.playerX)] == 'H'){     //Verificando se a posição a cima do Pac-Man é uma parede
+            /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+            }else{
+                if(M[(p.playerY)-1][(p.playerX)] == '.'){
+                    p.pontos=p.pontos+10;
+                }
+                if(M[(p.playerY)-1][(p.playerX)] == '*'){
+                    p.pontos=p.pontos+50; 
+                }
+                if(M[(p.playerY)-1][(p.playerX)] == 'F'){
+                    p.pontos=p.pontos+100; 
+                }
+                M[(p.playerY)][(p.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+                (p.playerY) = (p.playerY) - 1;               //Atribuindo a nova posição à nosso personagem
+                M[(p.playerY)][(p.playerX)] = 'v'; 
+            }
+        }
+        if(botao == 23362){ //pra baixo
+            if(M[(p.playerY)+1][(p.playerX)] == 'H')     //Verificando se a posição a baixo do Pac-Man é uma parede
+            {
+            /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+            }
+        else{
+            if(M[(p.playerY)+1][(p.playerX)] == '.'){
+                p.pontos=p.pontos+10;
+            }
+            if(M[(p.playerY)+1][(p.playerX)] == '*'){
+                p.pontos=p.pontos+50; 
+            }
+            if(M[(p.playerY)+1][(p.playerX)] == 'F'){
+                p.pontos=p.pontos+100; 
+            }
+            M[(p.playerY)][(p.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+            (p.playerY) = (p.playerY) + 1;               //Atribuindo a nova posição à nosso personagem
+            M[(p.playerY)][(p.playerX)] = '^'; 
+        }
+        }
+        if(botao == 23363){ //pra direita
+            if(M[(p.playerY)][(p.playerX)+1] == 'H')     //Verificando se a posição a direita do Pac-Man é uma parede
+            {
+            /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+            }
+        else{
+            if(M[(p.playerY)][(p.playerX)+1] == '.'){
+                p.pontos=p.pontos+10;
+            }
+            if(M[(p.playerY)][(p.playerX)+1] == '*'){
+                p.pontos=p.pontos+50; 
+            }
+            if(M[(p.playerY)][(p.playerX)+1] == 'F'){
+                p.pontos=p.pontos+100; 
+            }
+            M[(p.playerY)][(p.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+            (p.playerX) = (p.playerX) +1;               //Atribuindo a nova posição à nosso personagem
+            M[(p.playerY)][(p.playerX)] = '<'; 
+        }
+        }
+        if(botao == 23364){ //pra esquerda
+            if(M[(p.playerY)][(p.playerX)-1] == 'H')     //Verificando se a posição a esquerda do Pac-Man é uma parede
+            {
+            /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
+            }
+        else{
+            if(M[(p.playerY)][(p.playerX)-1] == '.'){
+                p.pontos=p.pontos+10;
+            }
+            if(M[(p.playerY)][(p.playerX)-1] == '*'){
+                p.pontos=p.pontos+50; 
+            }
+            if(M[(p.playerY)][(p.playerX)-1] == 'F'){
+                p.pontos=p.pontos+100; 
+            }
+            M[(p.playerY)][(p.playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
+            (p.playerX) = (p.playerX) - 1;               //Atribuindo a nova posição à nosso personagem
+            M[(p.playerY)][(p.playerX)] = '>'; 
+        }
+        } 
+    }
+
+}
+
+void printMatrix(char **M, int row, int col){
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            printf("%c", M[i][j]);
+        }
+        printf("\n");
+    }
+    
 void menuPrincipal(void){
     int ncols, nrows, key, c= ' ', count=0, selected = 0;
     eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
@@ -173,5 +266,4 @@ void menuPrincipal(void){
     eval( ATTR_RESET_ALL CURSOR_VISIBLE );
     gotoxy(nrows,1);
 	eval("\n");
-
 }
