@@ -184,7 +184,7 @@ void printMatrix(char **M, int row, int col){
         }
         printf("\n");
     }
-    
+}
 void menuPrincipal(void){
     int ncols, nrows, key, c= ' ', count=0, selected = 0;
     eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
