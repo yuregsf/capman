@@ -139,10 +139,10 @@ void movimentopacman(char **M, int x, int y){
         }
         if(botao == 23363){ //pra direita
             auxmov=botao;
-            if((p.playerX)+1 > tunel.mapCol){     
+            /* if((p.playerX)+1 > tunel.mapCol){     
                 p.playerX = 0;
                 M[(p.playerY)][(p.playerX)] = '<'; 
-            }
+            }*/
             if(M[(p.playerY)][(p.playerX)+1] == 'H')     //Verificando se a posição a direita do Pac-Man é uma parede
                 {
                 /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
@@ -164,10 +164,10 @@ void movimentopacman(char **M, int x, int y){
         }
         if(botao == 23364){ //pra esquerda
             auxmov=botao;
-            if((p.playerX)-1 < 0){     
+            /*if((p.playerX)-1 < 0){     
                 p.playerX = tunel.mapCol;
                 M[(p.playerY)][(p.playerX)] = '>'; 
-            }
+            }*/
             if(M[(p.playerY)][(p.playerX)-1] == 'H')     //Verificando se a posição a esquerda do Pac-Man é uma parede
             {
             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
