@@ -92,7 +92,8 @@ void movimentopacman(char **M, int x, int y,){
         clear();
         gotoxy(1,1);
         printMatrix(M, 6, 23);
-        botao = getch_timeout(0,150000);
+        auxmov=23364;
+        botao = getch_timeout(0,300000);
         if(botao==-1){
             botao=auxmov;
         }
