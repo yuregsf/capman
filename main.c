@@ -87,12 +87,12 @@ void movimentopacman(char **M, int x, int y,){
     p.playerX = x;
     p.playerY = y;
     int botao,auxmov;
+    auxmov=23364;
     configMapa tunel;
     while(1){
         clear();
         gotoxy(1,1);
         printMatrix(M, 6, 23);
-        auxmov=23364;
         botao = getch_timeout(0,300000);
         if(botao==-1){
             botao=auxmov;
