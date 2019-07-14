@@ -5,12 +5,13 @@
 #include <time.h>
 
 typedef struct{
-    int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow;
+    int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow, pontMax;
 }configMapa;
 
 typedef struct{
     int playerX, playerY;
     int pontos;
+    char iniciais[10];
 }player;
 
 typedef struct{
@@ -18,7 +19,6 @@ typedef struct{
     int behaviour;
     int mov;
 }ghost;
-
 void genMap(char c[128]);
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
@@ -60,7 +60,6 @@ void genMap(char c[128]){
             break;
         }
     }
-
     char **map = allocMatrix(config.mapRow, config.mapCol);
     for (int i = 0; i < config.mapRow; i++){
         fscanf(mapaSelecionado, "%s", line);
@@ -491,4 +490,40 @@ void menuMapas(void){
     eval( ATTR_RESET_ALL CURSOR_VISIBLE );
     gotoxy(nrows,1);
 	eval("\n");
+}
+void ranking(int p){
+    int j,k,i;
+    FILE * rankingtest;
+    rankingtest = fopen("ranking", "w");
+    int *ranking;
+    ranking = (int*) calloc(10,sizeof(int));
+    if(p.pontos>ranking[9]){
+        ranking[9]=p.pontos;
+        for (k = 0; k < 10; k++) {
+            for (j = 0; j < 10 - 1; j++) {
+                if (ranking[j] > ranking[j + 1]) {
+                    aux          = ranking[j];
+                    ranking[j]     = ranking[j + 1];
+                    ranking[j + 1] = aux;
+                }
+            }
+        }
+    }
+    for(i=0;i<10;i++){
+        fprintf(rankingtest, "%d\n",ranking[i]);
+    }
+    fclose(rankingtest);
+}
+
+void interfacegameover(int config,int p){
+    int pressBB;
+    clear();
+    gotoxy(config.mapCol/2 - 5, config.mapRow/2);
+    printf(FG_RED "GAME  OVER\n");
+    gotoxy(config.mapCol/2 - 5, config.mapRow/2 + 1);
+    printf(FG_YELLOW "SCORE: %d\n",p.pontos);
+    pressBB = getch();
+    if(pressBB == '\n' || pressBB == 'q'){
+        menuPrincipal();
+    }
 }
