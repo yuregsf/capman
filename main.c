@@ -319,12 +319,14 @@ void ranking(int p.pontos){
     fclose(rankingtest);
 }
 
-void interfacegameover(int config){
+void interfacegameover(int config,int p){
     clear();
-    gotoxy(config.mapCol/2 - 4, config.mapRow/2);
-    printf(FG_RED "GAME  OVER");
+    gotoxy(config.mapCol/2 - 5, config.mapRow/2);
+    printf(FG_RED "GAME  OVER\n");
+    gotoxy(config.mapCol/2 - 5, config.mapRow/2 + 1);
+    printf(FG_YELLOW "SCORE: %d\n",p.pontos);
     pressBB = getch();
-    if(pressBB == '\n'){
+    if(pressBB == '\n' || pressBB == 'q'){
         menuPrincipal();
     }
 }
