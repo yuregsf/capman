@@ -45,7 +45,7 @@ int main(){
 void genMap(char c[128]){
     FILE * mapaSelecionado;
     configMapa config;
-    config.pontMax = 0;
+    config.pontMax = -10;
     char line[256];
     int key;
     mapaSelecionado = fopen(c, "r");
@@ -159,6 +159,15 @@ void freeMatrix(char **matrix, int row){
 int movimentopacman(char **M, player *p, int acao, configMapa config){
     if(acao == 23361){ //pra cima
         if((p->playerY)-1 < 0){     
+            if(M[config.mapRow-1][(p->playerX)] == '.'){
+                p->pontos=p->pontos+10;
+            }
+            if(M[config.mapRow-1][(p->playerX)] == '*'){
+                p->pontos=p->pontos+50; 
+            }
+            if(M[config.mapRow-1][(p->playerX)] == 'F'){
+                p->pontos=p->pontos+100; 
+            }
             M[(p->playerY)][(p->playerX)] = ' '; 
             p->playerY = config.mapRow-1;
             M[(p->playerY)][(p->playerX)] = 'v'; 
@@ -182,6 +191,15 @@ int movimentopacman(char **M, player *p, int acao, configMapa config){
     }
     if(acao == 23362){ //pra baixo
         if((p->playerY)+1 >= config.mapRow){     
+            if(M[0][(p->playerX)] == '.'){
+            p->pontos=p->pontos+10;
+            }
+            if(M[0][(p->playerX)] == '*'){
+                p->pontos=p->pontos+50; 
+            }
+            if(M[0][(p->playerX)] == 'F'){
+                p->pontos=p->pontos+100; 
+            }
             M[(p->playerY)][(p->playerX)] = ' '; 
             p->playerY = 0;
             M[(p->playerY)][(p->playerX)] = '^'; 
@@ -207,6 +225,15 @@ int movimentopacman(char **M, player *p, int acao, configMapa config){
     }
     if(acao == 23363){ //pra direita
         if((p->playerX)+1 >= config.mapCol){     
+            if(M[(p->playerY)][0] == '.'){
+                p->pontos=p->pontos+10;
+            }
+            if(M[(p->playerY)][0] == '*'){
+                p->pontos=p->pontos+50; 
+            }
+            if(M[(p->playerY)][0] == 'F'){
+                p->pontos=p->pontos+100; 
+            }
             M[(p->playerY)][(p->playerX)] = ' '; 
             p->playerX = 0;
             M[(p->playerY)][(p->playerX)] = '<'; 
@@ -232,6 +259,15 @@ int movimentopacman(char **M, player *p, int acao, configMapa config){
     }
     if(acao == 23364){ //pra esquerda
         if((p->playerX)-1 < 0){     
+            if(M[(p->playerY)][config.mapCol-1] == '.'){
+                p->pontos=p->pontos+10;
+            }
+            if(M[(p->playerY)][config.mapCol-1] == '*'){
+                p->pontos=p->pontos+50; 
+            }
+            if(M[(p->playerY)][config.mapCol-1] == 'F'){
+                p->pontos=p->pontos+100; 
+            }
             M[(p->playerY)][(p->playerX)] = ' '; 
             p->playerX = config.mapCol-1;
             M[(p->playerY)][(p->playerX)] = '>'; 
