@@ -325,8 +325,8 @@ int Calcula_dist(int X, int Y, int x, int y)
  }
  void Controle_Ghost1(map){
    int i;
-   int j;
-   int dist_menor;
+   int j;                               //ghostX posicionamento do fantasma atual X, provavel passar por argumento
+   int dist_menor;                      //ghostY posicionamento do fantasma atual Y, provavel passar por argumento
    int ghostXmenor;
    int ghostYmenor;
    dist_menor = Calcula_dist((ghostX),(ghostY),(p.playerX),(p.playerY));
@@ -365,7 +365,7 @@ int Calcula_dist(int X, int Y, int x, int y)
    }
    /*APOS ENCONTRAR MELHOR POSIÇÃO PARA IR ATRAS DE PAC MAN*/
    if((*antGhost) == ' ')
-      map[(ghostY)][(ghostX)] = ' ';
+      map[(ghostY)][(ghostX)] = ' ';        //antGhost é a posição posterior pra onde o fantasma vai andar
    if((*antGhost) == '.')
       map[(ghostY)][(ghostX)] = '.';
    if((*antGhost) == 'H')
