@@ -4,7 +4,7 @@
 #include "termip.h"
 
 typedef struct{
-    int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow;
+    int playerCol, playerRow, ghostCol, ghostRow, mapCol, mapRow, pontMax;
 }configMapa;
 
 typedef struct{
@@ -49,7 +49,6 @@ void genMap(void){
             break;
         }
     }
-
     char **map = allocMatrix(config.mapRow, config.mapCol);
     for (int i = 0; i < config.mapRow; i++){
         fscanf(mapaSelecionado, "%s", line);
@@ -319,3 +318,61 @@ void ranking(int p.pontos){
     }
     fclose(rankingtest);
 }
+
+int Calcula_dist(int X, int Y, int x, int y)
+ {
+    return sqrt(pow(X-x,2) + pow(Y-y,2));
+ }
+ void Controle_Ghost1(map){
+   int i;
+   int j;
+   int dist_menor;
+   int ghostXmenor;
+   int ghostYmenor;
+   dist_menor = Calcula_dist((ghostX),(ghostY),(p.playerX),(p.playerY));
+   ghostXmenor = (ghostX) ;
+   ghostYmenor = (ghostY);
+   if((map[(ghostY)][(ghostX) - 1] != 'H') && (Calcula_dist(((ghostX)-1),(ghostY),(p.playerX),(p.playerY)) < dist_menor))
+   {
+      ghostXmenor = ((ghostX) - 1) ;
+      ghostYmenor = (ghostY);
+   }
+   if((map[(ghostY)][(ghostX) + 1] != 'H') && (Calcula_dist(((ghostX)+1),(ghostY),(p.playerX),(p.playerY)) < dist_menor))
+   {
+      ghostXmenor = ((ghostX) + 1) ;
+      ghostYmenor = (ghostY);
+   }
+   if((map[((ghostY) - 1)][(ghostX)] != 'H') && (Calcula_dist((ghostX),((ghostY)-1),(p.playerX),(p.playerY)) < dist_menor))
+   {
+      ghostXmenor = (ghostX);
+      ghostYmenor = ((ghostY) - 1);
+   }
+   if((map[((ghostY) + 1)][(ghostX)] != 'H') && (Calcula_dist((ghostX),((ghostY)+1),(p.playerX),(p.playerY)) < dist_menor))
+   {
+      ghostXmenor = (ghostX);
+      ghostYmenor = ((ghostY) + 1);
+   }
+   if((ghostX) == ghostXmenor && ((ghostY) == ghostYmenor))
+   {
+      if( pow( ((ghostX)-1) - (p.playerX) ,2) < pow( ((ghostX) - (p.playerX)) ,2)  && map[(ghostY)][(ghostX)-1] != 'H' )
+          ghostXmenor = (ghostX)-1;
+      else if( pow( ((ghostX)+1) - (p.playerX), 2) < pow( ((ghostX) - (p.playerX)), 2) && map[(ghostY)][(ghostX)+1]!= 'H' )
+          ghostXmenor = (ghostX)+1;
+      if( pow( ((ghostY)-1) - (p.playerY) ,2) < pow( ((ghostY) - (p.playerY)) ,2) && map[(ghostY)-1][(ghostX)]!= 'H' )
+          ghostYmenor = (ghostY)-1;
+      else if( pow( ((ghostY)+1) - (p.playerY), 2) < pow( ((ghostY) - (p.playerY)), 2) && map[(ghostY)+1][(ghostX)]!= 'H' )
+          ghostYmenor = (ghostY)+1;
+   }
+   /*APOS ENCONTRAR MELHOR POSIÇÃO PARA IR ATRAS DE PAC MAN*/
+   if((*antGhost) == ' ')
+      map[(ghostY)][(ghostX)] = ' ';
+   if((*antGhost) == '.')
+      map[(ghostY)][(ghostX)] = '.';
+   if((*antGhost) == 'H')
+      map[(ghostY)][(ghostX)] = 'H';
+   (ghostX) = ghostXmenor;
+   (ghostY) = ghostYmenor;
+   (*antGhost) = map[(ghostY)][(ghostX)];
+   if((ghostY) == (p.playerY) && (ghostX)== (p.playerX))
+      (vidadoPACMAN) = 0;          //variavel pra vida, se for a 0 game over, fazer um if pra isso
+ }
