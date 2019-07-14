@@ -295,7 +295,7 @@ void menuPrincipal(void){
     gotoxy(nrows,1);
 	eval("\n");
 }
-void ranking(int p.pontos){
+void ranking(int p){
     int j,k,i;
     FILE * rankingtest;
     rankingtest = fopen("ranking", "w");
