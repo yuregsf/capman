@@ -97,7 +97,7 @@ void game(char **M, configMapa config){
         printf("Score: %d", p.pontos);
         gotoxy(2,1);
         printMatrix(M, config.mapRow, config.mapCol);
-        botao = getch_timeout(0,300000);
+        botao = getch_timeout(0,150000);
         if(botao==-1){
             botao=auxmov;
         }
@@ -262,7 +262,7 @@ void movimentoGhost(char **M, ghost *g, int acao, configMapa config, char *aux){
             *aux = M[(g->ghostY)][(g->ghostX)];
             M[(g->ghostY)][(g->ghostX)] = 'G'; 
         }
-        else if(M[(g->ghostY)-1][(g->ghostX)] == 'H'){}
+        else if(M[(g->ghostY)-1][(g->ghostX)] == 'H' || M[(g->ghostY)-1][(g->ghostX)] == 'G'){}
         else{
             M[(g->ghostY)][(g->ghostX)] = *aux;           
             (g->ghostY) = (g->ghostY) - 1;               
@@ -277,7 +277,7 @@ void movimentoGhost(char **M, ghost *g, int acao, configMapa config, char *aux){
             *aux = M[(g->ghostY)][(g->ghostX)]; 
             M[(g->ghostY)][(g->ghostX)] = 'G'; 
         }
-        else if(M[(g->ghostY)+1][(g->ghostX)] == 'H'){}
+        else if(M[(g->ghostY)+1][(g->ghostX)] == 'H' || M[(g->ghostY)+1][(g->ghostX)] == 'G'){}
         else{
             M[(g->ghostY)][(g->ghostX)] = *aux;
             (g->ghostY) = (g->ghostY) + 1;
@@ -292,7 +292,7 @@ void movimentoGhost(char **M, ghost *g, int acao, configMapa config, char *aux){
             *aux = M[(g->ghostY)][(g->ghostX)]; 
             M[(g->ghostY)][(g->ghostX)] = 'G'; 
         }
-        else if(M[(g->ghostY)][(g->ghostX)+1] == 'H'){}
+        else if(M[(g->ghostY)][(g->ghostX)+1] == 'H' || M[(g->ghostY)][(g->ghostX)+1] == 'G'){}
         else{
             M[(g->ghostY)][(g->ghostX)] = *aux;
             (g->ghostX) = (g->ghostX) +1;
@@ -307,7 +307,7 @@ void movimentoGhost(char **M, ghost *g, int acao, configMapa config, char *aux){
             *aux = M[(g->ghostY)][(g->ghostX)]; 
             M[(g->ghostY)][(g->ghostX)] = 'G'; 
         }
-        else if(M[(g->ghostY)][(g->ghostX)-1] == 'H'){}
+        else if(M[(g->ghostY)][(g->ghostX)-1] == 'H' || M[(g->ghostY)][(g->ghostX)-1] == 'G'){}
         else{
             M[(g->ghostY)][(g->ghostX)] = *aux;
             (g->ghostX) = (g->ghostX) - 1;
