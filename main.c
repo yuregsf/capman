@@ -23,6 +23,7 @@ void genMap(char c[128]);
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
 int movimentopacman(char **M, player *p, int acao, configMapa config);
+void movimentoGhost(char **M, ghost *g, int acao, configMapa config, char *aux);
 void printMatrix(char **M, int row, int col);
 void menuPrincipal(void);
 void menuMapas(void);
@@ -82,18 +83,45 @@ void genMap(char c[128]){
 void game(char **M, configMapa config){
     int botao = 23363,auxmov = 23363;
     player p;
+    ghost g1,g2,g3,g4;
+    char auxG1, auxG2, auxG3, auxG4;
+    auxG1 = auxG2 = auxG3 = auxG4 = '.';
+    g1.ghostX = g2.ghostX = g3.ghostX = g4.ghostX = config.ghostCol;
+    g1.ghostY = g2.ghostY = g3.ghostY = g4.ghostY = config.ghostRow;
     p.playerX = config.playerCol;
     p.playerY = config.playerRow;
+    p.pontos = 0;
     while(1){
         clear();
         gotoxy(1,1);
+        printf("Score: %d", p.pontos);
+        gotoxy(2,1);
         printMatrix(M, config.mapRow, config.mapCol);
         botao = getch_timeout(0,300000);
         if(botao==-1){
             botao=auxmov;
         }
         auxmov = movimentopacman(M, &p, botao, config);
-        printMatrix(M, config.mapRow, config.mapCol);
+        movimentoGhost(M, &g1, randMove(), config, &auxG1);
+        movimentoGhost(M, &g2, randMove(), config, &auxG2);
+        movimentoGhost(M, &g3, randMove(), config, &auxG3);
+        movimentoGhost(M, &g4, randMove(), config, &auxG4);
+        if(botao == 'q'){
+            break;
+        }
+        //Colisão
+        if(p.playerX == g1.ghostX && p.playerY == g1.ghostY){
+            menuPrincipal();
+        }
+        if(p.playerX == g2.ghostX && p.playerY == g2.ghostY){
+            menuPrincipal();
+        }
+        if(p.playerX == g3.ghostX && p.playerY == g3.ghostY){
+            menuPrincipal();
+        }
+        if(p.playerX == g4.ghostX && p.playerY == g4.ghostY){
+            menuPrincipal();
+        }
     }
 }
 
@@ -214,8 +242,6 @@ int movimentopacman(char **M, player *p, int acao, configMapa config){
 }
 
 unsigned long int randMove(void){
-    time_t t;
-    srand((unsigned) time(&t));
     switch(rand()%4){
         case 0:
             return 23361;
@@ -228,132 +254,86 @@ unsigned long int randMove(void){
     }
 }
 
-// void movimentoGhost(char **M, int x, int y, configMapa config){
-//     ghost stuart, gasparzinho, zezinho, chico;
-//     stuart.ghostX = x;
-//     stuart.ghostY = y;
-//     gasparzinho.ghostX = x;
-//     gasparzinho.ghostY = y;
-//     zezinho.ghostX = x;
-//     zezinho.ghostY = y;
-//     chico.ghostX = x;
-//     chico.ghostY = y;
-
-//     printf("%u", randMove());
-//     while(1){
-//         clear();
-//         gotoxy(1,1);
-//         printMatrix(M, config.mapCol, config.mapRow);        
-//         if(botao == 23361){ //pra cima
-//             auxmov=botao;
-//             if((p->playerY)-1 < 0){     
-//                 M[(p->playerY)][(p->playerX)] = ' '; 
-//                 p->playerY = config.mapRow-1;
-//                 M[(p->playerY)][(p->playerX)] = 'v'; 
-//             }
-//             if(M[(p->playerY)-1][(p->playerX)] == 'H'){     //Verificando se a posição a cima do Pac-Man é uma parede
-//             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
-//             }else{
-//                 if(M[(p->playerY)-1][(p->playerX)] == '.'){
-//                     p->pontos=p->pontos+10;
-//                 }
-//                 if(M[(p->playerY)-1][(p->playerX)] == '*'){
-//                     p->pontos=p->pontos+50; 
-//                 }
-//                 if(M[(p->playerY)-1][(p->playerX)] == 'F'){
-//                     p->pontos=p->pontos+100; 
-//                 }
-//                 M[(p->playerY)][(p->playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
-//                 (p->playerY) = (p->playerY) - 1;               //Atribuindo a nova posição à nosso personagem
-//                 M[(p->playerY)][(p->playerX)] = 'v'; 
-//             }
-//         }
-//         if(botao == 23362){ //pra baixo
-//             auxmov=botao;
-//             if((p->playerY)+1 >= config.mapRow){     
-//                 M[(p->playerY)][(p->playerX)] = ' '; 
-//                 p->playerY = 0;
-//                 M[(p->playerY)][(p->playerX)] = '^'; 
-//             }
-//             if(M[(p->playerY)+1][(p->playerX)] == 'H')     //Verificando se a posição a baixo do Pac-Man é uma parede
-//             {
-//             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
-//             }
-//         else{
-//             if(M[(p->playerY)+1][(p->playerX)] == '.'){
-//                 p->pontos=p->pontos+10;
-//             }
-//             if(M[(p->playerY)+1][(p->playerX)] == '*'){
-//                 p->pontos=p->pontos+50; 
-//             }
-//             if(M[(p->playerY)+1][(p->playerX)] == 'F'){
-//                 p->pontos=p->pontos+100; 
-//             }
-//             M[(p->playerY)][(p->playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
-//             (p->playerY) = (p->playerY) + 1;               //Atribuindo a nova posição à nosso personagem
-//             M[(p->playerY)][(p->playerX)] = '^'; 
-//         }
-//         }
-//         if(botao == 23363){ //pra direita
-//             auxmov=botao;
-//             if((p->playerX)+1 >= config.mapCol){     
-//                 M[(p->playerY)][(p->playerX)] = ' '; 
-//                 p->playerX = 0;
-//                 M[(p->playerY)][(p->playerX)] = '<'; 
-//             }
-//             if(M[(p->playerY)][(p->playerX)+1] == 'H')     //Verificando se a posição a direita do Pac-Man é uma parede
-//                 {
-//                 /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
-//                 }
-//             else{
-//                 if(M[(p->playerY)][(p->playerX)+1] == '.'){
-//                     p->pontos=p->pontos+10;
-//                 }
-//                 if(M[(p->playerY)][(p->playerX)+1] == '*'){
-//                     p->pontos=p->pontos+50; 
-//                 }
-//                 if(M[(p->playerY)][(p->playerX)+1] == 'F'){
-//                     p->pontos=p->pontos+100; 
-//                 }
-//                 M[(p->playerY)][(p->playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
-//                 (p->playerX) = (p->playerX) +1;               //Atribuindo a nova posição à nosso personagem
-//                 M[(p->playerY)][(p->playerX)] = '<'; 
-//             }
-//         }
-//         if(botao == 23364){ //pra esquerda
-//             auxmov=botao;
-//             if((p->playerX)-1 < 0){     
-//                 M[(p->playerY)][(p->playerX)] = ' '; 
-//                 p->playerX = config.mapCol-1;
-//                 M[(p->playerY)][(p->playerX)] = '>'; 
-//             }
-//             if(M[(p->playerY)][(p->playerX)-1] == 'H')     //Verificando se a posição a esquerda do Pac-Man é uma parede
-//             {
-//             /*Nao altera mapa*/                      //Caso seja, não Efetue nenhuma ação
-//             }
-//             else{
-//                 if(M[(p->playerY)][(p->playerX)-1] == '.'){
-//                     p->pontos=p->pontos+10;
-//                 }
-//                 if(M[(p->playerY)][(p->playerX)-1] == '*'){
-//                     p->pontos=p->pontos+50; 
-//                 }
-//                 if(M[(p->playerY)][(p->playerX)-1] == 'F'){
-//                     p->pontos=p->pontos+100; 
-//                 }
-//                 M[(p->playerY)][(p->playerX)] = ' ';           //Deixando vazio por onde Pac_man passar
-//                 (p->playerX) = (p->playerX) - 1;               //Atribuindo a nova posição à nosso personagem
-//                 M[(p->playerY)][(p->playerX)] = '>'; 
-//             }
-//         }
-//     }
-
-// }
+void movimentoGhost(char **M, ghost *g, int acao, configMapa config, char *aux){
+    if(acao == 23361){ //pra cima
+        if((g->ghostY)-1 < 0){     
+            M[(g->ghostY)][(g->ghostX)] = *aux; 
+            g->ghostY = config.mapRow-1;
+            *aux = M[(g->ghostY)][(g->ghostX)];
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+        else if(M[(g->ghostY)-1][(g->ghostX)] == 'H'){}
+        else{
+            M[(g->ghostY)][(g->ghostX)] = *aux;           
+            (g->ghostY) = (g->ghostY) - 1;               
+            *aux = M[(g->ghostY)][(g->ghostX)]; 
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+    }
+    else if(acao == 23362){ //pra baixo
+        if((g->ghostY)+1 >= config.mapRow){     
+            M[(g->ghostY)][(g->ghostX)] = *aux; 
+            g->ghostY = 0;
+            *aux = M[(g->ghostY)][(g->ghostX)]; 
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+        else if(M[(g->ghostY)+1][(g->ghostX)] == 'H'){}
+        else{
+            M[(g->ghostY)][(g->ghostX)] = *aux;
+            (g->ghostY) = (g->ghostY) + 1;
+            *aux = M[(g->ghostY)][(g->ghostX)]; 
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+    }
+    else if(acao == 23363){ //pra direita
+        if((g->ghostX)+1 >= config.mapCol){     
+            M[(g->ghostY)][(g->ghostX)] = *aux; 
+            g->ghostX = 0;
+            *aux = M[(g->ghostY)][(g->ghostX)]; 
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+        else if(M[(g->ghostY)][(g->ghostX)+1] == 'H'){}
+        else{
+            M[(g->ghostY)][(g->ghostX)] = *aux;
+            (g->ghostX) = (g->ghostX) +1;
+            *aux = M[(g->ghostY)][(g->ghostX)]; 
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+    }
+    else if(acao == 23364){ //pra esquerda
+        if((g->ghostX)-1 < 0){     
+            M[(g->ghostY)][(g->ghostX)] = *aux; 
+            g->ghostX = config.mapCol-1;
+            *aux = M[(g->ghostY)][(g->ghostX)]; 
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+        else if(M[(g->ghostY)][(g->ghostX)-1] == 'H'){}
+        else{
+            M[(g->ghostY)][(g->ghostX)] = *aux;
+            (g->ghostX) = (g->ghostX) - 1;
+            *aux = M[(g->ghostY)][(g->ghostX)]; 
+            M[(g->ghostY)][(g->ghostX)] = 'G'; 
+        }
+    }
+}
 
 void printMatrix(char **M, int row, int col){
     for (int i = 0; i < row; i++){
         for (int j = 0; j < col; j++){
-            printf("%c", M[i][j]);
+            if(M[i][j] == 'v' || M[i][j] == '>' || M[i][j] == '<' || M[i][j] == '^')
+                printf(FG_YELLOW BG_DEFAULT"%c", M[i][j]);
+            else if(M[i][j] == '.')
+                printf(FG_WHITE BG_DEFAULT"%c", M[i][j]);
+            else if(M[i][j] == '*')
+                printf(FG_BLUE BG_DEFAULT"%c", M[i][j]);
+            else if(M[i][j] == 'G')
+                printf(FG_RED BG_DEFAULT"%c", M[i][j]);
+            else if(M[i][j] == 'H')
+                printf(BG_GREEN " ", M[i][j]);
+            else{
+                printf(FG_DEFAULT BG_DEFAULT " ");
+            }
+            printf(" ");
         }
         printf("\n");
     }
@@ -361,7 +341,7 @@ void printMatrix(char **M, int row, int col){
 void menuPrincipal(void){
     int ncols, nrows, key, c= ' ', count=0, selected = 0;
     eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
-    clear();
+    //clear();
     while(1){
         eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
         clear();
