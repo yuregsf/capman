@@ -320,6 +320,7 @@ void ranking(int p.pontos){
 }
 
 void interfacegameover(int config,int p){
+    int pressBB;
     clear();
     gotoxy(config.mapCol/2 - 5, config.mapRow/2);
     printf(FG_RED "GAME  OVER\n");
