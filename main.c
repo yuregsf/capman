@@ -323,7 +323,7 @@ int Calcula_dist(int X, int Y, int x, int y)
  {
     return sqrt(pow(X-x,2) + pow(Y-y,2));
  }
- void Controle_Ghost1(map){
+ void Controle_Ghost1(map){             //essa função so fazx o fantasma ver o menor caminho e seguir/ acho q se todos os fantasma seguir isso o jogo buga pra carai
    int i;
    int j;                               //ghostX posicionamento do fantasma atual X, provavel passar por argumento
    int dist_menor;                      //ghostY posicionamento do fantasma atual Y, provavel passar por argumento
