@@ -11,7 +11,7 @@ typedef struct{
 typedef struct{
     int playerX, playerY;
     int pontos;
-    char iniciais[10];
+    char iniciais[4];
 }player;
 
 typedef struct{
@@ -19,6 +19,7 @@ typedef struct{
     int behaviour;
     int mov;
 }ghost;
+
 void genMap(char c[128]);
 char **allocMatrix(int row, int col);
 void freeMatrix(char **matrix, int size);
@@ -29,6 +30,8 @@ void menuPrincipal(void);
 void menuMapas(void);
 unsigned long int randMove(void);
 void game(char **M, configMapa config);
+void ranking(player p);
+void gameOver(configMapa config, player p);
 
 
 int main(){
@@ -42,6 +45,7 @@ int main(){
 void genMap(char c[128]){
     FILE * mapaSelecionado;
     configMapa config;
+    config.pontMax = 0;
     char line[256];
     int key;
     mapaSelecionado = fopen(c, "r");
@@ -65,61 +69,75 @@ void genMap(char c[128]){
         fscanf(mapaSelecionado, "%s", line);
         for (int j = 0; j < config.mapCol; j++){
             map[i][j] = line[j];
+            if(line[j] == '.'){
+                config.pontMax += 10;
+            }
+            if(line[j] == '*'){
+                config.pontMax += 50;
+            }
+            if(line[j] == 'F'){
+                config.pontMax += 100;
+            }
         }            
     }
-
-    // //Posição do jogador
-    // map[config.playerRow][config.playerCol] = 'P';
-    // //Spawn dos fantasmas
-    // map[config.ghostRow][config.ghostCol] = 'G';
-
     game(map, config);
-    
-    freeMatrix(map, config.mapRow);
     fclose(mapaSelecionado);
 } 
 
 void game(char **M, configMapa config){
     int botao = 23363,auxmov = 23363;
     player p;
-    ghost g1,g2,g3,g4;
-    char auxG1, auxG2, auxG3, auxG4;
-    auxG1 = auxG2 = auxG3 = auxG4 = '.';
-    g1.ghostX = g2.ghostX = g3.ghostX = g4.ghostX = config.ghostCol;
-    g1.ghostY = g2.ghostY = g3.ghostY = g4.ghostY = config.ghostRow;
+    ghost g[4];
+    char auxG[4];
+    auxG[0] = auxG[1] = auxG[2] = auxG[3] = '.';
+    g[0].ghostX = g[1].ghostX = g[2].ghostX = g[3].ghostX = config.ghostCol;
+    g[0].ghostY = g[1].ghostY = g[2].ghostY = g[3].ghostY = config.ghostRow;
     p.playerX = config.playerCol;
     p.playerY = config.playerRow;
     p.pontos = 0;
     while(1){
         clear();
         gotoxy(1,1);
-        printf("Score: %d", p.pontos);
-        gotoxy(2,1);
+        printf(BG_DEFAULT FG_WHITE  "Score: " FG_BLUE "%d\n", p.pontos);
+        printf(BG_DEFAULT FG_WHITE  "Score: " FG_BLUE "%d\n", config.pontMax);
         printMatrix(M, config.mapRow, config.mapCol);
-        botao = getch_timeout(0,150000);
+        botao = getch_timeout(0,170000);
         if(botao==-1){
             botao=auxmov;
         }
         auxmov = movimentopacman(M, &p, botao, config);
-        movimentoGhost(M, &g1, randMove(), config, &auxG1);
-        movimentoGhost(M, &g2, randMove(), config, &auxG2);
-        movimentoGhost(M, &g3, randMove(), config, &auxG3);
-        movimentoGhost(M, &g4, randMove(), config, &auxG4);
+        movimentoGhost(M, &g[0], randMove(), config, &auxG[0]);
+        movimentoGhost(M, &g[1], randMove(), config, &auxG[1]);
+        movimentoGhost(M, &g[2], randMove(), config, &auxG[2]);
+        movimentoGhost(M, &g[3], randMove(), config, &auxG[3]);
         if(botao == 'q'){
             break;
         }
         //Colisão
-        if(p.playerX == g1.ghostX && p.playerY == g1.ghostY){
-            menuPrincipal();
+        if(p.playerX == g[0].ghostX && p.playerY == g[0].ghostY){
+            freeMatrix(M, config.mapRow);
+            gameOver(config, p);
+            break;
         }
-        if(p.playerX == g2.ghostX && p.playerY == g2.ghostY){
-            menuPrincipal();
+        if(p.playerX == g[1].ghostX && p.playerY == g[1].ghostY){
+            freeMatrix(M, config.mapRow);
+            gameOver(config, p);
+            break;
         }
-        if(p.playerX == g3.ghostX && p.playerY == g3.ghostY){
-            menuPrincipal();
+        if(p.playerX == g[2].ghostX && p.playerY == g[2].ghostY){
+            freeMatrix(M, config.mapRow);
+            gameOver(config, p);
+            break;
         }
-        if(p.playerX == g4.ghostX && p.playerY == g4.ghostY){
-            menuPrincipal();
+        if(p.playerX == g[3].ghostX && p.playerY == g[3].ghostY){
+            freeMatrix(M, config.mapRow);
+            gameOver(config, p);
+            break;
+        }
+        if(p.pontos == config.pontMax){
+            freeMatrix(M, config.mapRow);
+            gameOver(config, p);
+            break;
         }
     }
 }
@@ -340,7 +358,7 @@ void printMatrix(char **M, int row, int col){
 void menuPrincipal(void){
     int ncols, nrows, key, c= ' ', count=0, selected = 0;
     eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
-    //clear();
+    clear();
     while(1){
         eval( BG_DEFAULT FG_DEFAULT CURSOR_INVISIBLE );
         clear();
@@ -491,39 +509,51 @@ void menuMapas(void){
     gotoxy(nrows,1);
 	eval("\n");
 }
-void ranking(int p){
+void ranking(player p){
     int j,k,i;
-    FILE * rankingtest;
-    rankingtest = fopen("ranking", "w");
-    int *ranking;
-    ranking = (int*) calloc(10,sizeof(int));
-    if(p.pontos>ranking[9]){
-        ranking[9]=p.pontos;
+    player aux;
+    FILE * rankingFile;
+    rankingFile = fopen("ranking", "r");
+    player ranking[10];
+    for (i = 0; i < 10; i++){
+        fscanf(rankingFile, "%s %d", &ranking[i].iniciais, &ranking[i].pontos);
+    }
+    fclose(rankingFile);
+    if(p.pontos>ranking[9].pontos){
+        ranking[9]=p;
         for (k = 0; k < 10; k++) {
-            for (j = 0; j < 10 - 1; j++) {
-                if (ranking[j] > ranking[j + 1]) {
-                    aux          = ranking[j];
-                    ranking[j]     = ranking[j + 1];
+            for (j = 0; j < 9-k; j++) {
+                if (ranking[j].pontos < ranking[j + 1].pontos) {
+                    aux = ranking[j];
+                    ranking[j] = ranking[j + 1];
                     ranking[j + 1] = aux;
                 }
             }
         }
     }
+    rankingFile = fopen("ranking", "w");
+    clear();
     for(i=0;i<10;i++){
-        fprintf(rankingtest, "%d\n",ranking[i]);
+        fprintf(rankingFile, "%s %d\n",ranking[i].iniciais, ranking[i].pontos);
+        printf(FG_WHITE "%s " FG_YELLOW "%d\n",ranking[i].iniciais, ranking[i].pontos);
     }
-    fclose(rankingtest);
+    if(getch() != -1){
+        fclose(rankingFile);
+    }
 }
 
-void interfacegameover(int config,int p){
-    int pressBB;
+void gameOver(configMapa config, player p){
+    int press, i = 0;
     clear();
-    gotoxy(config.mapCol/2 - 5, config.mapRow/2);
-    printf(FG_RED "GAME  OVER\n");
-    gotoxy(config.mapCol/2 - 5, config.mapRow/2 + 1);
-    printf(FG_YELLOW "SCORE: %d\n",p.pontos);
-    pressBB = getch();
-    if(pressBB == '\n' || pressBB == 'q'){
+    gotoxy(1,1);
+    printf(FG_RED BG_DEFAULT "GAME  OVER\n");
+    printf(FG_YELLOW BG_DEFAULT "SCORE: %d\n",p.pontos);
+    eval(FG_WHITE);
+    printf("INICIAIS (MAX 3 LETRAS)\n");
+    scanf("%s", &p.iniciais);
+    ranking(p);
+    press = getch();
+    if(press != -1){
         menuPrincipal();
     }
 }
